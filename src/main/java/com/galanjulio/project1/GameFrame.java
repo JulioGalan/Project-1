@@ -85,6 +85,15 @@ public class GameFrame extends JFrame {
                 // Update all labels and if the panel is a treasure set the parameter to "Treasure" else to "Miss"
                 updateLabels(panel.isTreasure() ? "Treasure" : "Miss");
 
+                // Check if the amount of treasures left is 0
+                if (getTreasuresLeft() == 0) {
+                    // Disable all buttons
+                    panels.forEach(panels -> panels.getButton().setEnabled(false));
+
+                    updateLabels("You won");
+                    return;
+                }
+
                 // Check if they don't have any more tries
                 if (triesLeft == 0) {
                     // Disable all buttons
