@@ -1,0 +1,5 @@
+*.iml
+scores.ser
+pom.xml
+target/
+src/main/java/com/galanjulio/mesacs
