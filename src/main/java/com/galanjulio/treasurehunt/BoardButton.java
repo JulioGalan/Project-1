@@ -6,18 +6,15 @@ import javax.swing.*;
  * Name: Julio Galan
  * CSID: 5685924
  */
-public class Panel {
+public class BoardButton extends JButton {
 
-    // The index of this specific Panel
+    // The index of this specific BoardButton
     private int index;
 
     // Boolean variable to check if this panel contains a treasure
     private boolean treasure;
 
-    // The button belonging to this Panel
-    private JButton button;
-
-    public Panel(int index) {
+    public BoardButton(int index) {
         // Set the index to the one passed from the constructor
         this.index = index;
 
@@ -25,16 +22,17 @@ public class Panel {
         // This is assigned from the static final random instance from the main class
         this.treasure = Main.RANDOM.nextBoolean();
 
-        // Create the button from this Panel
-        this.button = new JButton("???");
+        // Name the button
+        setText("???");
 
         // Set the button visible
-        this.button.setVisible(true);
+        setVisible(true);
     }
 
     public JButton getButton() {
-        // Return the button belonging to this Panel
-        return button;
+        // Return the button belonging to this BoardButton
+        // Just return the instance of JButton from this class' superclass
+        return this;
     }
 
     public int getIndex() {

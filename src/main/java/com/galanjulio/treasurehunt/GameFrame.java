@@ -16,8 +16,8 @@ public class GameFrame extends JFrame {
     private JLabel treasuresFoundLabel;
     private JLabel triesLeftLabel;
 
-    // Create a List of Panels to store all necessary panels
-    private List<Panel> panels = new ArrayList<>();
+    // Create a List of Panels to store all necessary boardButtons
+    private List<BoardButton> boardButtons = new ArrayList<>();
 
     // Create necessary ints (tries left, treasures left, and treasures found)
     private int triesLeft;
@@ -29,7 +29,7 @@ public class GameFrame extends JFrame {
         super(title);
 
         // Set the size of the GUI
-        setSize(750, 350);
+        setSize(1000, 500);
 
         // Don't let people resize this GUI (messes up location of labels, buttons, and text fields)
         setResizable(false);
@@ -48,15 +48,15 @@ public class GameFrame extends JFrame {
         int y = 80;
 
         int index = 1;
-        for (int i = 0; i < 20; i++) {
-            // Create a new panel and give it an index parameter of 'i'
-            Panel panel = new Panel(i);
+        for (int i = 0; i < 100; i++) {
+            // Create a new boardButton and give it an index parameter of 'i'
+            BoardButton boardButton = new BoardButton(i);
 
-            // Add the newly created panel to our list
-            panels.add(panel);
+            // Add the newly created boardButton to our list
+            boardButtons.add(boardButton);
 
-            // Grab the panel's button
-            JButton button = panel.getButton();
+            // Grab the boardButton's button
+            JButton button = boardButton.getButton();
 
             // Add an action listener for this button
             button.addActionListener(event -> {
@@ -64,11 +64,11 @@ public class GameFrame extends JFrame {
                 // Disable the button so they can't click one button more than once
                 button.setEnabled(false);
 
-                // Set the button's text to "$" if the panel is a treasure and "O" if it's not
-                button.setText(panel.isTreasure() ? "$" : "O");
+                // Set the button's text to "$" if the boardButton is a treasure and "O" if it's not
+                button.setText(boardButton.isTreasure() ? "$" : "O");
 
-                // Checks if the panel is a treasure
-                if (panel.isTreasure()) {
+                // Checks if the boardButton is a treasure
+                if (boardButton.isTreasure()) {
 
                     // Decrease the number of treasures left
                     treasuresLeft--;
@@ -80,13 +80,13 @@ public class GameFrame extends JFrame {
                 // Decrease the number of tries left
                 triesLeft--;
 
-                // Update all labels and if the panel is a treasure set the parameter to "Treasure" else to "Miss"
-                updateLabels(panel.isTreasure() ? "Treasure" : "Miss");
+                // Update all labels and if the boardButton is a treasure set the parameter to "Treasure" else to "Miss"
+                updateLabels(boardButton.isTreasure() ? "Treasure" : "Miss");
 
                 // Check if the amount of treasures left is 0
                 if (getTreasuresLeft() == 0) {
                     // Disable all buttons
-                    panels.forEach(panels -> panels.getButton().setEnabled(false));
+                    boardButtons.forEach(panels -> panels.getButton().setEnabled(false));
 
                     updateLabels("You won");
                     return;
@@ -95,7 +95,7 @@ public class GameFrame extends JFrame {
                 // Check if they don't have any more tries
                 if (triesLeft == 0) {
                     // Disable all buttons
-                    panels.forEach(panels -> panels.getButton().setEnabled(false));
+                    boardButtons.forEach(panels -> panels.getButton().setEnabled(false));
 
                     // Check if the amount of treasures left is greater than one
                     if (getTreasuresLeft() > 1) {
@@ -116,14 +116,14 @@ public class GameFrame extends JFrame {
             // Set the location of this button
             button.setLocation(x, y);
 
-            // Add the panel's button to this GUI
+            // Add the boardButton's button to this GUI
             add(button);
 
             // Set the new x coordinate
             x += 60;
 
             // Check if the index divided by 4 is equal to 0
-            if (index % 4 == 0) {
+            if (index % 10 == 0) {
 
                 // If the above conditional succeeds, increase the y by 30 & set the x back to 270
                 y += 30;
@@ -147,7 +147,7 @@ public class GameFrame extends JFrame {
         // Create the last move label
         lastMoveLabel = new JLabel("Last move: ");
         // Set the location of this label
-        lastMoveLabel.setLocation(270, 265);
+        lastMoveLabel.setLocation(270, 415);
         // Make sure to set this invisible first since they have no moves made
         lastMoveLabel.setVisible(false);
         // Set the preferred size
@@ -208,11 +208,11 @@ public class GameFrame extends JFrame {
         // Start off the amount of treasures left to 0
         int left = 0;
 
-        // Loop through all the panels
-        for (Panel panel : panels) {
+        // Loop through all the boardButtons
+        for (BoardButton boardButton : boardButtons) {
 
-            // Check if the panel is a treasure AND check if the panel's button is enabled
-            if (panel.isTreasure() && panel.getButton().isEnabled()) {
+            // Check if the boardButton is a treasure AND check if the boardButton's button is enabled
+            if (boardButton.isTreasure() && boardButton.getButton().isEnabled()) {
 
                 // Increment the amount of treasures left
                 left++;
