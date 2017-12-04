@@ -12,7 +12,7 @@ public class BoardButton extends JButton {
     private int index;
 
     // Boolean variable to check if this panel contains a treasure
-    private boolean treasure;
+    // private boolean treasure;
 
     public BoardButton(int index) {
         // Set the index to the one passed from the constructor
@@ -20,7 +20,7 @@ public class BoardButton extends JButton {
 
         // 50/50 chance of this panel containing a treasure
         // This is assigned from the static final random instance from the main class
-        this.treasure = Main.RANDOM.nextBoolean();
+        // this.treasure = Main.RANDOM.nextBoolean();
 
         // Name the button
         setText("???");
@@ -40,8 +40,10 @@ public class BoardButton extends JButton {
         return index;
     }
 
+    /*
     public boolean isTreasure() {
         // Return weather or not this panel is a treasure
         return treasure;
     }
+    */
 }

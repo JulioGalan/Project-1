@@ -50,7 +50,7 @@ public class GameFrame extends JFrame {
         int index = 1;
         for (int i = 0; i < 100; i++) {
             // Create a new boardButton and give it an index parameter of 'i'
-            BoardButton boardButton = new BoardButton(i);
+            BoardButton boardButton = Main.RANDOM.nextBoolean() ? new TreasureButton(i) : new BoardButton(i);
 
             // Add the newly created boardButton to our list
             boardButtons.add(boardButton);
@@ -65,10 +65,10 @@ public class GameFrame extends JFrame {
                 button.setEnabled(false);
 
                 // Set the button's text to "$" if the boardButton is a treasure and "O" if it's not
-                button.setText(boardButton.isTreasure() ? "$" : "O");
+                button.setText(boardButton instanceof TreasureButton ? "$" : "O");
 
                 // Checks if the boardButton is a treasure
-                if (boardButton.isTreasure()) {
+                if (boardButton instanceof TreasureButton) {
 
                     // Decrease the number of treasures left
                     treasuresLeft--;
@@ -81,7 +81,7 @@ public class GameFrame extends JFrame {
                 triesLeft--;
 
                 // Update all labels and if the boardButton is a treasure set the parameter to "Treasure" else to "Miss"
-                updateLabels(boardButton.isTreasure() ? "Treasure" : "Miss");
+                updateLabels(boardButton instanceof TreasureButton ? "Treasure" : "Miss");
 
                 // Check if the amount of treasures left is 0
                 if (getTreasuresLeft() == 0) {
@@ -212,7 +212,7 @@ public class GameFrame extends JFrame {
         for (BoardButton boardButton : boardButtons) {
 
             // Check if the boardButton is a treasure AND check if the boardButton's button is enabled
-            if (boardButton.isTreasure() && boardButton.getButton().isEnabled()) {
+            if (boardButton instanceof TreasureButton && boardButton.getButton().isEnabled()) {
 
                 // Increment the amount of treasures left
                 left++;
