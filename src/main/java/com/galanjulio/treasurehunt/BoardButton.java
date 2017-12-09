@@ -6,10 +6,12 @@ import javax.swing.*;
  * Name: Julio Galan
  * CSID: 5685924
  */
-public class BoardButton extends JButton {
+public abstract class BoardButton extends JButton {
 
     // The index of this specific BoardButton
     private int index;
+
+    public abstract String getTextAfterClick();
 
     public BoardButton(int index) {
         // Set the index to the one passed from the constructor

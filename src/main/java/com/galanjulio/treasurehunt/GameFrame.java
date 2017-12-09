@@ -47,16 +47,36 @@ public class GameFrame extends JFrame {
         int x = 270;
         int y = 80;
 
+        // Start an index which will be used to correctly space out the buttons
         int index = 1;
+
+        // Instantiate a BoardButton which we'll use inside the for loop
+        BoardButton previous = null;
+
         for (int i = 0; i < 100; i++) {
-            // Create a new boardButton and give it an index parameter of 'i'
-            BoardButton boardButton = Main.RANDOM.nextBoolean() ? new TreasureButton(i) : new BoardButton(i);
+            // Randomly create a new certain type of button using our static final Random instance from our Main class
+            BoardButton boardButton = Main.RANDOM.nextBoolean() ? new TreasureButton(i) : new MissButton(i);
+
+            // Check if the previous button is not null and if it is a treasurebutton
+            if (previous != null && previous instanceof TreasureButton) {
+
+                // Set the boardbutton to a minebutton
+                boardButton = new MineButton(i);
+            }
+
+            // Set the previous
+            previous = boardButton;
 
             // Add the newly created boardButton to our list
             boardButtons.add(boardButton);
 
             // Grab the boardButton's button
             JButton button = boardButton.getButton();
+
+            // We need a final board button here as it's required for use of lambdas
+            // I changed the button above based on a couple conditions in regards to treasure positioning
+            // so a final instance of the boardbutton is required here.
+            final BoardButton finalBoardButton = boardButton;
 
             // Add an action listener for this button
             button.addActionListener(event -> {
@@ -65,10 +85,10 @@ public class GameFrame extends JFrame {
                 button.setEnabled(false);
 
                 // Set the button's text to "$" if the boardButton is a treasure and "O" if it's not
-                button.setText(boardButton instanceof TreasureButton ? "$" : "O");
+                button.setText(finalBoardButton.getTextAfterClick());
 
                 // Checks if the boardButton is a treasure
-                if (boardButton instanceof TreasureButton) {
+                if (finalBoardButton instanceof TreasureButton) {
 
                     // Decrease the number of treasures left
                     treasuresLeft--;
@@ -80,22 +100,28 @@ public class GameFrame extends JFrame {
                 // Decrease the number of tries left
                 triesLeft--;
 
-                // Update all labels and if the boardButton is a treasure set the parameter to "Treasure" else to "Miss"
-                updateLabels(boardButton instanceof TreasureButton ? "Treasure" : "Miss");
+                // Update all labels and if the boardButton is a treasure set the parameter to "Treasure" else if it's a miss then "Miss" else it's a mine so they lose
+                updateLabels(finalBoardButton instanceof TreasureButton ? "Treasure" : finalBoardButton instanceof MissButton ? "Miss" : "You lose");
 
                 // Check if the amount of treasures left is 0
                 if (getTreasuresLeft() == 0) {
                     // Disable all buttons
-                    boardButtons.forEach(panels -> panels.getButton().setEnabled(false));
+                    boardButtons.forEach(panels -> {
+                        panels.getButton().setText(panels.getTextAfterClick());
+                        panels.getButton().setEnabled(false);
+                    });
 
                     updateLabels("You won");
                     return;
                 }
 
-                // Check if they don't have any more tries
-                if (triesLeft == 0) {
+                // Check if they don't have any more tries OR if they clicked a minebutton
+                if (triesLeft == 0 || finalBoardButton instanceof MineButton) {
                     // Disable all buttons
-                    boardButtons.forEach(panels -> panels.getButton().setEnabled(false));
+                    boardButtons.forEach(panels -> {
+                        panels.getButton().setText(panels.getTextAfterClick());
+                        panels.getButton().setEnabled(false);
+                    });
 
                     // Check if the amount of treasures left is greater than one
                     if (getTreasuresLeft() > 1) {
@@ -122,7 +148,7 @@ public class GameFrame extends JFrame {
             // Set the new x coordinate
             x += 60;
 
-            // Check if the index divided by 4 is equal to 0
+            // Check if the remainder of (index/10) is 0
             if (index % 10 == 0) {
 
                 // If the above conditional succeeds, increase the y by 30 & set the x back to 270
@@ -139,10 +165,10 @@ public class GameFrame extends JFrame {
         treasuresFound = 0;
 
         // Set the tries left to the amount of treasures there are
-        triesLeft = getTreasuresLeft();
+        triesLeft = giveStartingTreasures();
 
         // Set the treasures left
-        treasuresLeft = getTreasuresLeft();
+        treasuresLeft = giveStartingTreasures();
 
         // Create the last move label
         lastMoveLabel = new JLabel("Last move: ");
@@ -205,21 +231,26 @@ public class GameFrame extends JFrame {
     }
 
     private int getTreasuresLeft() {
-        // Start off the amount of treasures left to 0
-        int left = 0;
+        // Return the amount of treasures that are left on the board
+        return treasuresLeft;
+    }
 
-        // Loop through all the boardButtons
+    private int giveStartingTreasures() {
+        // Instantiate an int at 0
+        int toReturn = 0;
+
+        // Loop through every boardbutton we have
         for (BoardButton boardButton : boardButtons) {
 
-            // Check if the boardButton is a treasure AND check if the boardButton's button is enabled
-            if (boardButton instanceof TreasureButton && boardButton.getButton().isEnabled()) {
+            // Check if the boardbutton is a treasure
+            if (boardButton instanceof TreasureButton) {
 
-                // Increment the amount of treasures left
-                left++;
+                // Increment the amount which we'll return
+                toReturn++;
             }
         }
 
-        // Return the amount of treasures left
-        return left;
+        // Return the amount of treasures
+        return toReturn;
     }
 }
