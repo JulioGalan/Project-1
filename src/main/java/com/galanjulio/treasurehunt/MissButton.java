@@ -14,6 +14,11 @@ public class MissButton extends BoardButton {
         return "O";
     }
 
+    @Override
+    public boolean isTreasure() {
+        return false;
+    }
+
     public MissButton(int index) {
         // Call the super method from BoardButton, providing it with an index parameter
         super(index);

@@ -14,8 +14,18 @@ public class TreasureButton extends BoardButton {
         return "$";
     }
 
+    @Override
+    public boolean isTreasure() {
+        return true;
+    }
+
     public TreasureButton(int index) {
         // Call the super method from BoardButton, providing it with an index parameter
         super(index);
+    }
+
+    public int getPoints() {
+        // Get a random number from 0-2 and add 1
+        return Main.RANDOM.nextInt(2) + 1;
     }
 }

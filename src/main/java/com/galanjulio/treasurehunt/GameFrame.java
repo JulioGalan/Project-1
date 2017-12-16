@@ -10,19 +10,21 @@ import java.util.List;
  */
 public class GameFrame extends JFrame {
 
-    // Create the necessary labels (last move, treasures left, treasures found, and tries left)
+    // Create the necessary labels (last move, treasures left, treasures found, tries left, and points)
     private JLabel lastMoveLabel;
     private JLabel treasuresLeftLabel;
     private JLabel treasuresFoundLabel;
     private JLabel triesLeftLabel;
+    private JLabel pointsLabel;
 
     // Create a List of Panels to store all necessary boardButtons
     private List<BoardButton> boardButtons = new ArrayList<>();
 
-    // Create necessary ints (tries left, treasures left, and treasures found)
+    // Create necessary ints (tries left, treasures left, treasures found, and points)
     private int triesLeft;
     private int treasuresLeft;
     private int treasuresFound;
+    private int points;
 
     GameFrame(String title) {
         // Let the title of the GUI be set when creating a new instance of this 'GameFrame' class
@@ -58,7 +60,7 @@ public class GameFrame extends JFrame {
             BoardButton boardButton = Main.RANDOM.nextBoolean() ? new TreasureButton(i) : new MissButton(i);
 
             // Check if the previous button is not null and if it is a treasurebutton
-            if (previous != null && previous instanceof TreasureButton) {
+            if (previous != null && previous.isTreasure()) {
 
                 // Set the boardbutton to a minebutton
                 boardButton = new MineButton(i);
@@ -88,20 +90,26 @@ public class GameFrame extends JFrame {
                 button.setText(finalBoardButton.getTextAfterClick());
 
                 // Checks if the boardButton is a treasure
-                if (finalBoardButton instanceof TreasureButton) {
+                if (finalBoardButton.isTreasure()) {
+
+                    // Cast finalBoardButton to TreasureButton to use its methods
+                    TreasureButton treasureButton = (TreasureButton) finalBoardButton;
 
                     // Decrease the number of treasures left
                     treasuresLeft--;
 
                     // Increase the number of treasures found
                     treasuresFound++;
+
+                    // Increase the points
+                    points += treasureButton.getPoints();
                 }
 
                 // Decrease the number of tries left
                 triesLeft--;
 
                 // Update all labels and if the boardButton is a treasure set the parameter to "Treasure" else if it's a miss then "Miss" else it's a mine so they lose
-                updateLabels(finalBoardButton instanceof TreasureButton ? "Treasure" : finalBoardButton instanceof MissButton ? "Miss" : "You lose");
+                updateLabels(finalBoardButton.isTreasure() ? "Treasure" : finalBoardButton instanceof MissButton ? "Miss" : "You lose");
 
                 // Check if the amount of treasures left is 0
                 if (getTreasuresLeft() == 0) {
@@ -207,6 +215,34 @@ public class GameFrame extends JFrame {
         triesLeftLabel.setSize(triesLeftLabel.getPreferredSize());
         // Add the tries left label to the GUI
         add(triesLeftLabel);
+
+        // Create the points label
+        pointsLabel = new JLabel("Points: " + points);
+        // Set the location of this label
+        pointsLabel.setLocation(35, 170);
+        // Set the preferred size
+        pointsLabel.setSize(pointsLabel.getPreferredSize());
+        // Add the points label to the GUI
+        add(pointsLabel);
+
+        // Create a button to go back to the menu
+        JButton menuButton = new JButton("Menu");
+        // Set the location of the button
+        menuButton.setLocation(50, 25);
+        // Set the preferred size
+        menuButton.setSize(menuButton.getPreferredSize());
+        // Set the action of this button
+        menuButton.addActionListener(event -> {
+            // Set the menu frame visible
+            Main.getInstance().getMenuFrame().setVisible(true);
+            // Set the menu frame to front
+            Main.getInstance().getMenuFrame().toFront();
+
+            // Hide the game frame
+            this.setVisible(false);
+        });
+        // Add the menu button to the GUI
+        add(menuButton);
     }
 
     private void updateLabels(String lastMove) {
@@ -228,6 +264,9 @@ public class GameFrame extends JFrame {
 
         // Update the tries left label
         this.triesLeftLabel.setText("Tries left: " + triesLeft);
+
+        // Update the points label
+        this.pointsLabel.setText("Points: " + points);
     }
 
     private int getTreasuresLeft() {
@@ -243,7 +282,7 @@ public class GameFrame extends JFrame {
         for (BoardButton boardButton : boardButtons) {
 
             // Check if the boardbutton is a treasure
-            if (boardButton instanceof TreasureButton) {
+            if (boardButton.isTreasure()) {
 
                 // Increment the amount which we'll return
                 toReturn++;

@@ -21,6 +21,9 @@ public class Main {
     // The main game frame
     private JFrame gameFrame;
 
+    // The menu frame
+    private JFrame menuFrame;
+
     public static void main(String[] args) {
         // Just making it look a little pretty so it's not default styling
         try {
@@ -34,14 +37,20 @@ public class Main {
     }
 
     private Main() {
-        // Create a new GameFrame instance and pass it the program name + 5 rows
+        // Create a new GameFrame instance and pass it the program name
         gameFrame = new GameFrame(PROGRAM_NAME);
 
-        // Set the game frame visible
-        gameFrame.setVisible(true);
+        // Set the game frame invisible for now
+        gameFrame.setVisible(false);
 
-        // Set the game frame to be the one in front (in case we want to add other frames in the future)
-        gameFrame.toFront();
+        // Create a new MenuFrame instance and pass it the program name
+        menuFrame = new MenuFrame(PROGRAM_NAME);
+
+        // Set the menu frame visible
+        menuFrame.setVisible(true);
+
+        // Set the menu frame to be the one in front
+        menuFrame.toFront();
     }
 
     public static Main getInstance() {
@@ -52,5 +61,10 @@ public class Main {
     public JFrame getGameFrame() {
         // Return an instance of our main (game) frame
         return gameFrame;
+    }
+
+    public JFrame getMenuFrame() {
+        // Return an instance of our menu frame
+        return menuFrame;
     }
 }

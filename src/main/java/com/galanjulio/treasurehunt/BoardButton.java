@@ -11,7 +11,11 @@ public abstract class BoardButton extends JButton {
     // The index of this specific BoardButton
     private int index;
 
+    // Get the text that will be shown after a user clicks on the button
     public abstract String getTextAfterClick();
+
+    // A check to see if this button is a treasure button
+    public abstract boolean isTreasure();
 
     public BoardButton(int index) {
         // Set the index to the one passed from the constructor
